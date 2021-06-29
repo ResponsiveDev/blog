@@ -9,25 +9,38 @@ const config = parse(
 
 serve({
   "/page/:num": async (req, params): Promise<Response> => {
-    if(req.method.toLowerCase() !== "get") {
-      return new Response(
-        null,
+    if(req.method.toLowerCase() === "get") {
+      const page =  await fetch(
+        `${config.github}/${config.out}/page-${params.num}.json`,
         {
-          status: 400,
           headers: {
-            "Access-Control-Allow-Origin": "*"
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
           }
         }
       );
+
+      if(page.ok) {
+        try {
+          return json(
+            await page.json(),
+            {
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json"
+              }
+            }
+          );
+        // deno-lint-ignore no-empty
+        } catch {}
+      }
     }
 
-    return await fetch(
-      `${config.github}/${config.out}/page-${params.num}.json`,
+    return new Response(
+      null,
       {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        }
+        status: 400,
+        headers: { "Access-Control-Allow-Origin": "*" }
       }
     );
   },
@@ -39,16 +52,19 @@ serve({
       );
 
       if(post.ok) {
-        return json(
-          post,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "application/json",
-              "Cache-Control": "max-age=86400"
+        try {
+          return json(
+            await post.json(),
+            {
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json",
+                "Cache-Control": "max-age=86400"
+              }
             }
-          }
-        );
+          );
+        // deno-lint-ignore no-empty
+        } catch {}
       }
     }
 
