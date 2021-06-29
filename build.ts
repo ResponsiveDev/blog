@@ -1,6 +1,8 @@
 import { resolve, join } from "https://deno.land/std@0.99.0/path/mod.ts";
-import { parse, stringify } from "https://deno.land/std@0.99.0/encoding/yaml.ts";
+import { parse } from "https://deno.land/std@0.99.0/encoding/yaml.ts";
 import { wait } from "https://deno.land/x/wait@0.1.11/mod.ts";
+
+import { postsUrl } from "./consts.ts";
 
 const postsDir = resolve("posts");
 
@@ -31,6 +33,7 @@ type PostMeta = {
     link?: string;
   }[];
   draft?: boolean;
+  slug?: string;
   url?: string;
 };
 
@@ -74,7 +77,6 @@ all.sort(
 
 loading.succeed("Posts sorted");
 
-const postsUrl = "https://github.com/ResponsiveDev/blog/raw/master/posts";
 const postsPerPage = 10;
 const pages: Pages[] = [{ posts: [] }];
 
@@ -85,6 +87,7 @@ for(const { name, meta, content } of all) {
 
   await Deno.writeTextFile(join(postsDir, name), content);
 
+  meta.slug = name.replace(".md", "");
   meta.url = `${postsUrl}/${name}`;
   pages[pages.length - 1].posts.push(meta);
 
