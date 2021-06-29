@@ -1,10 +1,13 @@
-import { ansi, colors, config, PostMeta, resolve, parse, Page } from "./deps.ts";
+import { ansi, colors, Config, PostMeta, resolve, parse, Page } from "./deps.ts";
 
 function info(text: string) {
   Deno.stdout.write((new TextEncoder()).encode(
     `${ansi.eraseLine.cursorLeft}${colors.brightBlue("i")} ${text}\n`
   ));
 }
+
+info("loading config");
+const config = parse(await Deno.readTextFile("./config.yml")) as Config;
 
 try {
   await Deno.remove(config.out, { recursive: true });

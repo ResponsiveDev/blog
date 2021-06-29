@@ -1,8 +1,6 @@
 export { resolve } from "https://deno.land/std@0.99.0/path/mod.ts";
 export { ansi, colors } from "https://deno.land/x/cliffy@v0.19.2/ansi/mod.ts";
-
-import { parse } from "https://deno.land/std@0.99.0/encoding/yaml.ts";
-export { parse };
+export { parse } from "https://deno.land/std@0.99.0/encoding/yaml.ts";
 
 /**
  * ```yaml
@@ -48,5 +46,3 @@ export type Config = {
   // where the github repo is
   github: string;
 };
-
-export const config = parse(await Deno.readTextFile("./config.yml")) as Config;

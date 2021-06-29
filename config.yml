@@ -3,6 +3,6 @@ in: blog
 # the output directory containing the formatted posts
 out: dist
 # the max amount of posts per page
-max: 1
+max: 10
 # where the github repo is
 github: https://github.com/ResponsiveDev/blog/raw/master
