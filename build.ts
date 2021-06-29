@@ -29,7 +29,7 @@ for await(const { name, isFile } of Deno.readDir(resolve(config.in))) {
   info(`reading meta from "${name}"`);
   const meta = parse(file[0]) as PostMeta;
 
-  // if(meta.draft) continue;
+  if(meta.draft) continue;
 
   meta.slug = name.replace(".md", "");
   meta.content = file[1];
