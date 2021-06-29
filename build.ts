@@ -62,6 +62,11 @@ for await(const fileMeta of Deno.readDir("./")) {
 
   const meta = parse(file[0]) as PostMeta;
 
+  await Deno.writeTextFile(
+    join(postsDir, fileMeta.name),
+    await Deno.readTextFile(resolve(fileMeta.name))
+  );
+
   all.push({ name: fileMeta.name, meta, content: file[1] });
 }
 
@@ -85,7 +90,7 @@ loading = wait("Writing posts");
 for(const { name, meta, content } of all) {
   if(meta.draft) { continue; }
 
-  await Deno.writeTextFile(join(postsDir, name), content);
+  // await Deno.writeTextFile(join(postsDir, name), content);
 
   meta.slug = name.replace(".md", "");
   meta.url = `${postsUrl}/${name}`;

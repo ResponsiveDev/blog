@@ -1,3 +1,11 @@
+---
+title: Same Community, New Site
+description: The Responsive website? What? That exists?
+date: 2021-06-20T09:10:00
+authors:
+  - name: Shane
+    link: https://twitter.com/vandesm14
+---
 (warning, I really wanted to post this ASAP so there may be spelling and layout issues)
 
 # Thanks for the nine months!
