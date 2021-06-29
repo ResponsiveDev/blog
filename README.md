@@ -1,6 +1,19 @@
 This contains the responsive blog in all its glory - if that's what you can
 call it.
 
+## The Build Script
+
+Once you've added, updated, or removed a post you have to run the build script
+using [deno](https://deno.land). This will add/remove the new/updated/existing
+post(s) from the `posts/` folder and edit the right `page-*.json` metadata file
+accordingly.
+
+To run the build script:
+
+`deno run --allow-all --unstable build.ts`
+
+You can download [deno here](https://deno.land).
+
 ## Adding a Post
 
 To add a post just create a new `.md` file with the file name set to the posts
@@ -26,11 +39,11 @@ draft: true                           # default: false
 
 ## Updating a Post
 
-Updating a post is as easy as modifying the file, yep, that's it.
+Updating a post is as easy as modifying the file.
 
 ## Deleting a Post
 
-And deleting a post is also just as easy, just delete it.
+And deleting a post is also just as easy.
 
 ## Draft Posts
 
