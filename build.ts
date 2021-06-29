@@ -1,125 +1,86 @@
-import { resolve, join } from "https://deno.land/std@0.99.0/path/mod.ts";
-import { parse } from "https://deno.land/std@0.99.0/encoding/yaml.ts";
-import { wait } from "https://deno.land/x/wait@0.1.11/mod.ts";
+import { ansi, colors, config, PostMeta, resolve, parse, Page } from "./deps.ts";
 
-import { postsUrl } from "./consts.ts";
+function info(text: string) {
+  Deno.stdout.write((new TextEncoder()).encode(
+    `${ansi.eraseLine.cursorLeft}${colors.brightBlue("i")} ${text}\n`
+  ));
+}
 
-const postsDir = resolve("posts");
+try {
+  await Deno.remove(config.out, { recursive: true });
+// deno-lint-ignore no-empty
+} catch {}
+await Deno.mkdir(config.out, { recursive: true });
 
-await Deno.remove(postsDir, { recursive: true });
-await Deno.mkdir(postsDir, { recursive: true });
+const all: PostMeta[] = [];
 
-/**
- * ```yaml
- * ---
- * # Required
- * title: Post Title                     # String format
- * description: The post description     # String format
- * date: 2021-06-25T01:59:13.834Z        # UTC Date format
- * # Optional
- * authors:                              # All authors for this post
- *   - name: Shane                       # default: Responsive
- *     link: https://twitter.com/RespDev # default: https://twitter.com/RespDev
- * draft: true                           # default: false
- * ---
- * ```
- */
-type PostMeta = {
-  title: string;
-  description: string;
-  date: string;
-  authors: {
-    name: string;
-    link?: string;
-  }[];
-  draft?: boolean;
-  slug?: string;
-  url?: string;
-};
+for await(const { name, isFile } of Deno.readDir(resolve(config.in))) {
+  if(!isFile || !name.endsWith(".md")) { continue; }
 
-type Pages = {
-  posts: PostMeta[],
-  next?: string;
-  prev?: string;
-};
-
-const all: { name: string, meta: PostMeta, content: string }[] = [];
-
-let loading = wait("Reading files");
-
-for await(const fileMeta of Deno.readDir("./")) {
-  if(
-    !fileMeta.name.endsWith(".md")
-    || fileMeta.name.toLowerCase() === "readme.md"
-  ) {
-    continue;
-  }
-
-  const file = (await Deno.readTextFile(resolve(fileMeta.name)))
+  info(`reading content from "${name}"`);
+  const file = (await Deno.readTextFile(resolve(config.in, name)))
     .split("---", 3)
     .slice(1)
     .map(str => str.trim());
 
+  info(`reading meta from "${name}"`);
   const meta = parse(file[0]) as PostMeta;
 
-  await Deno.writeTextFile(
-    join(postsDir, fileMeta.name),
-    await Deno.readTextFile(resolve(fileMeta.name))
-  );
+  // if(meta.draft) continue;
 
-  all.push({ name: fileMeta.name, meta, content: file[1] });
+  meta.slug = name.replace(".md", "");
+  meta.content = file[1];
+
+  info(`pushing meta from "${name}"`);
+  all.push(meta);
 }
 
-loading.succeed("Files read");
-
-loading = wait("Sorting posts");
-
+info(`sorting all posts`);
 all.sort(
-  (post1, post2) => new Date(post1.meta.date) <= new Date(post2.meta.date)
+  (left, right) => new Date(left.date) <= new Date(right.date)
     ? -1
     : 0
 );
 
-loading.succeed("Posts sorted");
+const pages: Page[] = [{ posts: [] }];
 
-const postsPerPage = 10;
-const pages: Pages[] = [{ posts: [] }];
-
-loading = wait("Writing posts");
-
-for(const { name, meta, content } of all) {
-  if(meta.draft) { continue; }
-
-  // await Deno.writeTextFile(join(postsDir, name), content);
-
-  meta.slug = name.replace(".md", "");
-  meta.url = `${postsUrl}/${name}`;
+for(const meta of all) {
+  info("creating post pagination");
   pages[pages.length - 1].posts.push(meta);
 
-  if(pages[pages.length - 1].posts.length === postsPerPage) {
-    pages[pages.length - 1].next = `${postsUrl}/page-${pages.length}.json`;
+  if(pages[pages.length - 1].posts.length >= config.max) {
+    pages[pages.length - 1].next =
+      `${config.github}/${config.out}/page-${pages.length}.json`;
 
     pages.push({
       posts: [],
-      prev: `${postsUrl}/page-${pages.length - 1}.json`
+      prev: `${config.github}/${config.out}/page-${pages.length}.json`
     });
   }
 }
-
-loading.succeed("Posts written");
 
 if(pages[pages.length - 1].posts.length === 0) {
   pages.splice(pages.length - 1);
   delete pages[pages.length - 1].next;
 }
 
-loading = wait("Writing page metas");
-
 for(let i = 0; i < pages.length; i++) {
+  const page = { ...pages[i] };
+  page.posts = page.posts.map(post => ({ ...post, content: undefined! }));
+
+  info(`writing page meta "page-${i}.json"`);
   await Deno.writeTextFile(
-    resolve("./posts", `page-${i}.json`),
-    JSON.stringify(pages[i])
+    resolve(`${config.out}`, `page-${i}.json`),
+    JSON.stringify(page)
   );
+
+  for(const post of pages[i].posts) {
+    info(`writing post meta "${post.slug}.json"`);
+    await Deno.writeTextFile(
+      resolve(`${config.out}`, `${post.slug}.json`),
+      JSON.stringify(post)
+    );
+  }
 }
 
-loading.succeed("Page metas written");
+info("done");

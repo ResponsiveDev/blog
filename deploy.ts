@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/x/sift@0.3.2/mod.ts";
-
-import { postsUrl } from "./consts.ts";
+import { config } from "./deps.ts";
 
 serve({
   "/page/:num": async (req, params): Promise<Response> => {
@@ -17,7 +16,7 @@ serve({
     }
 
     return await fetch(
-      `${postsUrl}/page-${params.num}.json`,
+      `${config.github}/${config.out}/page-${params.num}.json`,
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
@@ -39,7 +38,7 @@ serve({
       );
     }
     return await fetch(
-      `${postsUrl}/${params.slug}.md`,
+      `${config.github}/${config.out}/${params.slug}.json`,
       {
         headers: {
           "Access-Control-Allow-Origin": "*",

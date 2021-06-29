@@ -1,1 +1,0 @@
-export const postsUrl = "https://github.com/ResponsiveDev/blog/raw/master/posts";
