@@ -1,0 +1,23 @@
+---
+title: And the First Theme Is...
+description: Let's get this party started!
+date: 2021-07-03T01:05:50.622Z
+authors:
+  - name: Leon
+    link: https://leon.respdev.com
+  - name: Shane
+    link: https://twitter.com/vandesm14
+---
+
+This is just a quick little mini blog post for the first **theme**, and since
+it's the first one I'll go over a few things so that we're all clear.
+
+# The Theme
+
+The first **theme** is **filesystems**! You may create a virtual filesystem for
+the web, a little file explorer for the terminal, or something else entierly!
+
+We hope that you enjoy the new system! The projects area on the website hasn't
+yet been implemented so stay tuned for that when it releases.
+
+Have fun!
