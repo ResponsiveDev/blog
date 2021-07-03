@@ -5,8 +5,6 @@ date: 2021-07-03T01:05:50.622Z
 authors:
   - name: Leon
     link: https://other.respdev.com
-  - name: Shane
-    link: https://twitter.com/vandesm14
 ---
 
 ***A quick note**: We really wanted to get this out as quick as we could as it
