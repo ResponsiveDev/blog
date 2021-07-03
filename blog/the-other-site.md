@@ -4,7 +4,7 @@ description: And we just got a new look...
 date: 2021-06-29T20:35:53.929Z
 authors:
   - name: Leon
-    link: https://leon.respdev.com/
+    link: https://other.respdev.com/
 ---
 
 # It's Alive!
