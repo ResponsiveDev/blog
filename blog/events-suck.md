@@ -1,7 +1,7 @@
 ---
 title: Events Suck; Let's Change That!
 description: Yet another change for the better
-date: 2021-06-20T15:11:00Z
+date: 2021-07-03T01:05:50.622Z
 authors:
   - name: Leon
     link: https://other.respdev.com
