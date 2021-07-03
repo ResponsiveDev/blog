@@ -45,14 +45,14 @@ people aren't the competitive type**, so we need a better format than this.
 
 **You** have things to do, and so do we. **A week is not long enough** for
 people to get a, *sometimes medium sized*, project done. This is especially
-true when said project **doesn't excite you** and is, for all intensive
+true when said project **doesn't excite you** and is, for all intents and
 purposes, a *side project*.
 
 ## Involvement
 
 **Not many people got involved, and we don't blame you**. The events were
-boring, never fit anyones schedule, and didn't even have a reward (*like most
-events!*). **It's not on you that we didn't provided fun events, that's our
+boring, never fit anyone's schedule, and didn't even have a reward (*like most
+events!*). **It's not on you that we didn't provide fun events, that's our
 problem and we want to fix it...**
 
 # In with the New
@@ -84,6 +84,6 @@ write your own blog post about it to be shared here**!
 
 We hope that this time we can make something enjoyable for everyone. As always,
 your feedback is greatly appreciated, feel free to `@Leonski` or `@TheDevBird`
-us in the **discord** or email us at responsivedev@pm.me.
+in the **discord** or email us at responsivedev@pm.me.
 
 Thanks for being such an amazing community!
