@@ -13,6 +13,10 @@ authors:
 is a big update. Sorry for any mistakes you see or weird sentence structures,
 we were just excited!*
 
+# Update: First Monthly Theme!
+
+You can find the event [here](/blog/the-first-theme.md)!
+
 # Out with the Old
 
 So we've all seen the events, a friendly competition to create something in a
