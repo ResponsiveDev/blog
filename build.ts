@@ -60,7 +60,7 @@ const createFeed = (): JsonFeedInit => {
     title: "Responsive Blog",
 
     home_page_url: "https://respdev.com",
-    feed_url: "https://ResponsiveDev.github.io/blog/dist/feed-1.json",
+    feed_url: "https://ResponsiveDev.github.io/blog/dist/feed-0.json",
 
     favicon: "https://respdev.com/old-fav.png",
 
