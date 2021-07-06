@@ -1,89 +1,103 @@
-import { ansi, colors, Config, PostMeta, resolve, parse, Page } from "./deps.ts";
+// deno-lint-ignore-file camelcase
 
-function info(text: string) {
-  Deno.stdout.write((new TextEncoder()).encode(
-    `${ansi.eraseLine.cursorLeft}${colors.brightBlue("i")} ${text}\n`
-  ));
-}
+import { parse } from "https://deno.land/std@0.100.0/encoding/yaml.ts";
+import { blue, green, yellow, bold } from "https://deno.land/std@0.100.0/fmt/colors.ts";
+import { resolve } from "https://deno.land/std@0.100.0/path/mod.ts";
 
-info("loading config");
+import { html } from "https://deno.land/x/rusty_markdown@v0.3.0/mod.ts";
+
+import { Config, JsonFeedItem, FileMeta, JsonFeedInit } from "./types.ts";
+
+const info = (text: string) => { console.log(blue(`${bold("i")} ${text}`)); };
+const add = (text: string) => { console.log(green(`${bold("+")} ${text}`)); };
+const skip = (text: string) => { console.log(yellow(`${bold("-")} ${text}`)); };
+
 const config = parse(await Deno.readTextFile("./config.yml")) as Config;
+info("config loaded");
 
-try {
-  await Deno.remove(config.out, { recursive: true });
-// deno-lint-ignore no-empty
-} catch {}
 await Deno.mkdir(config.out, { recursive: true });
+info(`directory "${config.out}" created`);
 
-const all: PostMeta[] = [];
+const items: JsonFeedItem[] = [];
 
 for await(const { name, isFile } of Deno.readDir(resolve(config.in))) {
   if(!isFile || !name.endsWith(".md")) { continue; }
 
-  info(`reading content from "${name}"`);
   const file = (await Deno.readTextFile(resolve(config.in, name)))
     .split("---", 3)
     .slice(1)
     .map(str => str.trim());
 
-  info(`reading meta from "${name}"`);
-  const meta = parse(file[0]) as PostMeta;
+  const meta = parse(file[0]) as FileMeta;
+  if(meta.draft) { skip(`skipping "${name} (draft)`); continue; }
 
-  if(meta.draft) continue;
+  const item: JsonFeedItem = {
+    id: name.replace(".md", ""),
+    title: meta.title,
 
-  meta.slug = name.replace(".md", "");
-  meta.content = file[1];
+    authors: meta.authors,
 
-  info(`pushing meta from "${name}"`);
-  all.push(meta);
+    summary: meta.description,
+    content_html: html(file[1]),
+
+    date_published: meta.date
+  };
+
+  items.push(item);
+  add(`adding "${name}"`);
 }
 
-info(`sorting all posts`);
-all.sort(
-  (left, right) => new Date(left.date) <= new Date(right.date)
-    ? -1
-    : 0
+items.sort(
+  (left, right) => new Date(left.date_published) <= new Date(right.date_published)
+    ? 0
+    : -1
 );
+info(`sorted ${items.length} posts by date`);
 
-const pages: Page[] = [{ posts: [] }];
+const createFeed = (): JsonFeedInit => {
+  return {
+    version: "https://jsonfeed.org/version/1.1",
+    title: "Responsive Blog",
 
-for(const meta of all) {
-  info("creating post pagination");
-  pages[pages.length - 1].posts.push(meta);
+    home_page_url: "https://respdev.com",
+    feed_url: "https://ResponsiveDev.github.io/blog/dist/feed-1.json",
 
-  if(pages[pages.length - 1].posts.length >= config.max) {
-    pages[pages.length - 1].next =
-      `${config.github}/${config.out}/page-${pages.length}.json`;
+    favicon: "https://respdev.com/old-fav.png",
 
-    pages.push({
-      posts: [],
-      prev: `${config.github}/${config.out}/page-${pages.length}.json`
-    });
+    authors: [{
+      name: "Responsive",
+      url: "https://twitter.com/respdev"
+    }],
+
+    items: []
+  };
+};
+
+const feeds: JsonFeedInit[] = [createFeed()];
+
+for(const item of items) {
+  feeds[feeds.length - 1].items.push(item);
+
+  if(feeds[feeds.length - 1].items.length >= config.max) {
+    feeds[feeds.length - 1].next_url =
+      `${config.github}/${config.out}/feed-${feeds.length}.json`;
+    feeds.push(createFeed());
   }
 }
 
-if(pages[pages.length - 1].posts.length === 0) {
-  pages.splice(pages.length - 1);
-  delete pages[pages.length - 1].next;
+if(feeds[feeds.length - 1].items.length === 0) {
+  feeds.splice(feeds.length - 1);
+  delete feeds[feeds.length - 1].next_url;
 }
 
-for(let i = 0; i < pages.length; i++) {
-  const page = { ...pages[i] };
-  page.posts = page.posts.map(post => ({ ...post, content: undefined! }));
+info(`grouped into ${feeds.length} feeds`);
 
-  info(`writing page meta "page-${i}.json"`);
+for(let i = 0; i < feeds.length; i++) {
+  const feed = feeds[i];
+
   await Deno.writeTextFile(
-    resolve(`${config.out}`, `page-${i}.json`),
-    JSON.stringify(page)
+    resolve(config.out, `feed-${i}.json`),
+    JSON.stringify(feed)
   );
-
-  for(const post of pages[i].posts) {
-    info(`writing post meta "${post.slug}.json"`);
-    await Deno.writeTextFile(
-      resolve(`${config.out}`, `${post.slug}.json`),
-      JSON.stringify(post)
-    );
-  }
+  info(`wrote "feed-${i}.json"`);
 }
-
-info("done");

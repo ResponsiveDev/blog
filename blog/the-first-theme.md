@@ -4,9 +4,9 @@ description: Let's get this party started!
 date: 2021-07-03T01:05:51.622Z
 authors:
   - name: Leon
-    link: https://other.respdev.com
+    url: https://other.respdev.com
   - name: Shane
-    link: https://twitter.com/vandesm14
+    url: https://twitter.com/vandesm14
 ---
 
 This is just a quick little mini blog post for the first **theme**, and since

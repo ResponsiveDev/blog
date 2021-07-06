@@ -4,7 +4,7 @@ description: The Responsive website? What? That exists?
 date: 2021-06-20T15:10:00Z
 authors:
   - name: Shane
-    link: https://twitter.com/vandesm14
+    url: https://twitter.com/vandesm14
 ---
 (warning, I really wanted to post this ASAP so there may be spelling and layout issues)
 

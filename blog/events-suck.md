@@ -4,9 +4,9 @@ description: Yet another change for the better
 date: 2021-07-03T01:05:50.622Z
 authors:
   - name: Leon
-    link: https://other.respdev.com
+    url: https://other.respdev.com
   - name: Shane
-    link: https://twitter.com/vandesm14
+    url: https://twitter.com/vandesm14
 ---
 
 ***A quick note**: We really wanted to get this out as quick as we could as it
