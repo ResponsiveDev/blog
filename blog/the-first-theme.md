@@ -1,7 +1,7 @@
 ---
 title: And the First Theme Is...
-description: Let's get this party started!
-date: 2021-07-03T01:05:51.622Z
+summary: Let's get this party started!
+date_published: 2021-07-03T01:05:51.622Z
 authors:
   - name: Leon
     url: https://other.respdev.com

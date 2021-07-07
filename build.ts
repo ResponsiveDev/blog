@@ -6,7 +6,7 @@ import { resolve } from "https://deno.land/std@0.100.0/path/mod.ts";
 
 import { html } from "https://deno.land/x/rusty_markdown@v0.3.0/mod.ts";
 
-import { Config, JsonFeedItem, FileMeta, JsonFeedInit } from "./types.ts";
+import { Config, JsonFeedItem, JsonFeed } from "./types.ts";
 
 const info = (text: string) => { console.log(blue(`${bold("i")} ${text}`)); };
 const add = (text: string) => { console.log(green(`${bold("+")} ${text}`)); };
@@ -28,20 +28,11 @@ for await(const { name, isFile } of Deno.readDir(resolve(config.in))) {
     .slice(1)
     .map(str => str.trim());
 
-  const meta = parse(file[0]) as FileMeta;
-  if(meta.draft) { skip(`skipping "${name} (draft)`); continue; }
+  const item = parse(file[0]) as JsonFeedItem;
+  if(item._draft) { skip(`skipping "${name} (draft)`); continue; }
 
-  const item: JsonFeedItem = {
-    id: name.replace(".md", ""),
-    title: meta.title,
-
-    authors: meta.authors,
-
-    summary: meta.description,
-    content_html: html(file[1]),
-
-    date_published: meta.date
-  };
+  item.id = name.replace(".md", "");
+  item.content_html = html(file[1]);
 
   items.push(item);
   add(`adding "${name}"`);
@@ -54,13 +45,13 @@ items.sort(
 );
 info(`sorted ${items.length} posts by date`);
 
-const createFeed = (): JsonFeedInit => {
+const createFeed = (): JsonFeed => {
   return {
     version: "https://jsonfeed.org/version/1.1",
     title: "Responsive Blog",
 
     home_page_url: "https://respdev.com",
-    feed_url: "https://ResponsiveDev.github.io/blog/dist/feed-0.json",
+    feed_url: `${config.github}/${config.out}/feed-0.json`,
 
     favicon: "https://respdev.com/old-fav.png",
 
@@ -73,10 +64,17 @@ const createFeed = (): JsonFeedInit => {
   };
 };
 
-const feeds: JsonFeedInit[] = [createFeed()];
+const feeds: JsonFeed[] = [createFeed()];
 
 for(const item of items) {
   feeds[feeds.length - 1].items.push(item);
+
+  await Deno.writeTextFile(
+    resolve(config.out, `${item.id}.json`),
+    JSON.stringify(item)
+  );
+
+  info(`wrote "${item.id}.json"`);
 
   if(feeds[feeds.length - 1].items.length >= config.max) {
     feeds[feeds.length - 1].next_url =

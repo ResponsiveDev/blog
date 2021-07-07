@@ -11,16 +11,8 @@ export type Config = {
   github: string;
 };
 
-export type FileMeta = {
-  title: string;
-  description: string;
-  date: string;
-  authors?: JsonFeedAuthor[];
-  draft?: boolean;
-};
-
 export type JsonFeedAuthor = {
-  name?: string;
+  name: string;
   url?: string;
   avatar?: string;
 };
@@ -49,9 +41,13 @@ export type JsonFeedItem = {
     mime_type: string;
     title?: string;
   }[];
+
+  // extensions
+
+  _draft?: boolean;
 };
 
-export type JsonFeedInit = {
+export type JsonFeed = {
   version: string;
 
   title: string;

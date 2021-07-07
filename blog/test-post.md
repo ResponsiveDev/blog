@@ -1,11 +1,11 @@
 ---
 title: Test Post
-description: Nothing to see here, except for a test
-date: 2021-06-19T17:17:00
+summary: Nothing to see here, except for a test
+date_published: 2021-06-19T17:17:00
 authors:
   - name: Shane
     url: https://twitter.com/vandesm14
-draft: true
+_draft: true
 ---
 # Heading 1
 # Heading 2

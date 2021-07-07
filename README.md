@@ -3,49 +3,61 @@ call it.
 
 ## The Build Script
 
-Once you've added, updated, or removed a post you have to run the build script
-using [deno](https://deno.land). This will add/remove the new/updated/existing
-post(s) from the `posts/` folder and edit the right `page-*.json` metadata file
-accordingly.
+Once you've added, updated, and/or removed all the files you were editing, you
+need to run the build command before pushing to actually use all of the changes.
+If you're working on a post but aren't finsihed, see [Draft Posts](#draft-posts).
 
-To run the build script:
+To run the build script you need [deno](https://deno.land) installed, and then
+run:
 
-`deno run --allow-all --unstable build.ts`
-
-You can download [deno here](https://deno.land).
-
-## Adding a Post
-
-To add a post just create a new `.md` file with the file name set to the posts
-slug, e.g. `hello-world.md`. There should **ONLY** be English letters, numbers,
-and dashes (`-`) in the file name.
-
-Inside the file should be some metadata, in YAML, above the contents that looks
-like this:
-
-```yml
----
-# Required
-title: Post Title                     # String format
-description: The post description     # String format
-date: 2021-06-25T01:59:13.834Z        # UTC Date format
-# Optional
-authors:                              # All authors for this post
-  - name: Shane                       # default: Responsive
-    link: https://twitter.com/RespDev # default: https://twitter.com/RespDev
-draft: true                           # default: false
----
+```bash
+deno run --allow-read --allow-write build.ts
 ```
 
-## Updating a Post
+## Required Meta
 
-Updating a post is as easy as modifying the file.
+We use [YAML](https://yaml.org/) meta at the top of our markdown files so that
+the build script can fill in the blanks for [JSON Feed](https://jsonfeed.org/).
+This meta should have `---` above the first field and `---` after the last
+field, see `blog/test-post.md` for an example.
 
-## Deleting a Post
+Some meta is required and **must** be filled in:
 
-And deleting a post is also just as easy.
+```yml
+title: The Post Title                # required: string
+summary: The Post Description        # required: string
+date_published: 2021-06-20T15:10:00Z # requiredL utc date
+```
+
+Whilst the next meta fields aren't required, they're generally very good to
+have:
+
+```yml
+authors:                             # optional: array of authors
+  - name: Your Name                  # required: string
+    url: https://example.com         # optional: url
+```
+
+And the last one is an extension field we use, it starts with an `_` to be spec
+compliant. This is not needed **unless** want to push any unfinished/unchecked
+posts, see [Draft Posts](#draft-posts):
+
+```yml
+_draft: true                         # optional: boolean
+```
+
+A full list of all the fields can be found in `types.ts` under `JsonPostItem`,
+however, we don't (currently) use all of them. That said, they can be included
+if you'd like, most readers are likely to use them.
 
 ## Draft Posts
 
-Draft posts are posts with the `draft` metadata set to `true`. These will not
-be part of the final build and therefore will not show up on the website.
+If you're working on a post but want to push, please set the `_draft` field in
+the meta to `true`, that way it's clear that it's a draft and the build script
+will skip it if someone does try to build it.
+
+## JSON Feed
+
+We use [JSON Feed](https://jsonfeed.org/) for our blog post system which allows
+our blog to be read using all readers that support it. The entry point into the
+feed is at https://responsivedev.github.io/blog/dist/feed-0.json.

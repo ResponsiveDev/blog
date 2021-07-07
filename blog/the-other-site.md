@@ -1,7 +1,7 @@
 ---
 title: The Other Site
-description: And we just got a new look...
-date: 2021-06-29T20:35:53.929Z
+summary: And we just got a new look...
+date_published: 2021-06-29T20:35:53.929Z
 authors:
   - name: Leon
     url: https://other.respdev.com/
