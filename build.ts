@@ -33,6 +33,7 @@ for await(const { name, isFile } of Deno.readDir(resolve(config.in))) {
 
   item.id = name.replace(".md", "");
   item.content_html = html(file[1]);
+  item._content_md = file[1];
 
   items.push(item);
   add(`adding "${name}"`);
