@@ -1,6 +1,6 @@
 ---
 title: "Theme: Communication and Networking"
-summary: The theme for august is communication and networking... now what could that mean?
+summary: Communication and networking... now what could that mean?
 date_published: 2021-08-05T16:59:32Z
 authors:
   - name: Shane
