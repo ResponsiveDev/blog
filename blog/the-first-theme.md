@@ -22,4 +22,4 @@ yet been implemented so stay tuned for that when it releases.
 
 Have fun!
 
-(you can find more about the new event workflow [here](/blog/events-suck.md))
+(you can find more about the new event workflow [here](/blog/events-suck))

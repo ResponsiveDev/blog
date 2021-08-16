@@ -15,7 +15,7 @@ we were just excited!*
 
 # Update: First Monthly Theme!
 
-You can find the event [here](/blog/the-first-theme.md)!
+You can find the event [here](/blog/the-first-theme)!
 
 # Out with the Old
 
