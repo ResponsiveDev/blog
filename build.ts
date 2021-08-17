@@ -54,7 +54,7 @@ const createFeed = (): JsonFeed => {
     home_page_url: "https://respdev.com",
     feed_url: `${config.github}/${config.out}/feed-0.json`,
 
-		_last_updated: new Date().toUTCString(),
+		_last_updated: new Date().toISOString(),
 
     favicon: "https://respdev.com/old-fav.png",
 
