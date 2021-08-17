@@ -61,6 +61,8 @@ export type JsonFeed = {
   home_page_url?: string;
   feed_url?: string;
 
+	_last_updated: string;
+
   next_url?: string;
 
   items: JsonFeedItem[];
