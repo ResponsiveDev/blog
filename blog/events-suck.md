@@ -7,6 +7,7 @@ authors:
     url: https://other.respdev.com
   - name: Shane
     url: https://twitter.com/vandesm14
+tags: [blog]
 ---
 
 ***A quick note**: We really wanted to get this out as quick as we could as it

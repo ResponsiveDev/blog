@@ -7,6 +7,7 @@ authors:
     url: https://other.respdev.com
   - name: Shane
     url: https://twitter.com/vandesm14
+tags: [event, theme]
 ---
 
 This is just a quick little mini blog post for the first **theme**, and since

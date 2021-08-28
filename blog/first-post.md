@@ -5,6 +5,7 @@ date_published: 2021-06-20T15:10:00Z
 authors:
   - name: Shane
     url: https://twitter.com/vandesm14
+tags: [blog]
 ---
 (warning, I really wanted to post this ASAP so there may be spelling and layout issues)
 

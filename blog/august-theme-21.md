@@ -5,6 +5,7 @@ date_published: 2021-08-05T16:59:32Z
 authors:
   - name: Shane
     url: https://twitter.com/vandesm14
+tags: [event, theme]
 ---
 Hey everyone! I apologize for the delay in releasing the monthly theme for August. I'll do better next time!
 
